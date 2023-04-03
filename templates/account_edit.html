@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container d-flex justify-content-center my-5">
+    <div class="profile bg-body-tertiary col-12 col-sm-7 p-5">
+        <form action="/account/edit" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row d-flex justify-content-center">
+                <div class="mb-3 col-12 col-sm-4 d-flex justify-content-center">
+                    <div class="dp" style="height:120px; width:120px; border-radius:50%; background-color: white; background-image: url('{{user_profile.dp.url}}'); 
+                background-size:cover;"></div>
+                </div>
+
+                <div class="mb-3 col-12 col-sm-4 d-flex align-items-center">
+                    <div>
+                    <label for="exampleFormControlInput1" class="form-label">Change profile photo</label>
+                    <input type="file" name="dp" class="form-control" id="exampleFormControlInput1" >
+                </div>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="mb-3 col-12 col-sm-4">
+                    <label for="exampleFormControlInput1" class="form-label">First name</label>
+                    <input type="text" value="{{user_model.first_name}}" name="first_name" class="form-control" id="exampleFormControlInput1" placeholder="First name">
+                </div>
+                <div class="mb-3 col-12 col-sm-4">
+                    <label for="exampleFormControlInput1" class="form-label">Last name</label>
+                    <input type="text" value="{{user_model.last_name}}" name="last_name" class="form-control" id="exampleFormControlInput1" placeholder="Last name">
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="mb-3 col-12 col-sm-8">
+                    <label for="exampleFormControlInput1" class="form-label">Bio</label>
+                    <textarea class="form-control" placeholder="Write here.." name="bio" id="floatingTextarea">{{user_profile.bio}}</textarea>
+                </div>
+
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="mb-3 col-12 col-sm-4">
+                    <label for="exampleFormControlInput1" class="form-label">Email</label>
+                    <!-- email is field is part of user model so user_model.email -->
+                    <input type="email" value="{{user_model.email}}" class="form-control" id="exampleFormControlInput1" placeholder="Email id"
+                        readonly>
+                </div>
+                <div class="mb-3 col-12 col-sm-4">
+                    <label for="exampleFormControlInput1" class="form-label">Contact no.</label>
+                    <input type="number" value="{{user_profile.contact_no}}" name="contact_no" class="form-control" id="exampleFormControlInput1" placeholder="+91 ">
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="mb-3 col-12 col-sm-4">
+                    <label for="exampleFormControlInput1" class="form-label">Country</label>
+                    <input type="text" value="{{user_profile.country}}" name="country" class="form-control" id="exampleFormControlInput1" placeholder="Country">
+                </div>
+                <div class="mb-3 col-12 col-sm-4">
+                    <label for="exampleFormControlInput1" class="form-label">City</label>
+                    <input type="text" value="{{user_profile.city}}" name="city" class="form-control" id="exampleFormControlInput1" placeholder="City">
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="mb-3 col-12 col-sm-2">
+                    <input type="submit" class="form-control btn btn-primary" value="Save">
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
