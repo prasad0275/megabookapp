@@ -10,8 +10,8 @@ from django.conf import settings
 @login_required(login_url='/auth/login')
 def index(request):
     user_profile = Profile.objects.get(user = request.user)
-
-    return render(request,'index.html',{'user_profile' : user_profile}) 
+    posts = Post.objects.order_by('-created_at')
+    return render(request,'index.html',{'user_profile' : user_profile,'posts': posts}) 
 
 def login(request):
     if request.method == 'POST':
@@ -74,7 +74,25 @@ def logout(request):
 def account(request):
     user_profile = Profile.objects.get(user=request.user)
     user_model = User.objects.get(username = request.user)
-    return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model})
+    user_posts = Post.objects.filter(user=request.user).order_by('-created_at')
+    image_id = request.GET.get("image")
+
+    q_delete = request.GET.get("delete")
+    if q_delete != None:
+        print("delete")
+        user_post_image = Post.objects.get(id=image_id)
+        user_post_image.delete()
+        return redirect('/account')
+
+    print("image : ",image_id)
+    if image_id != None:
+        user_post_image = Post.objects.get(id=image_id)
+        return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'user_post_image':user_post_image})
+
+    # print(user_posts.image)
+    # if image != None:
+    #     user_post_image = Post.objects.get(id=image)
+    return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts})
 
 @login_required(login_url='/auth/login')
 def account_edit(request):

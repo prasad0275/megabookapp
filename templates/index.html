@@ -1,104 +1,87 @@
 {% extends "base.html" %}
 {% block content %}
 {% load static %}
-    <!-- Posts -->
-    <div class="container">
-        {% for message in messages %}
-        <div class="alert alert-success d-flex align-items-center" role="alert">
-            <style>
-                .material-symbols-outlined {
-                  font-variation-settings:
-                  'FILL' 1,
-                  'wght' 400,
-                  'GRAD' 0,
-                  'opsz' 48
-                }
-                </style>
-            <span class="material-symbols-outlined">
-                check_circle
-                </span><div>
-              {{message}}
-            </div>
-          </div>
-        {% endfor %}
-       
-        <div class="row my-5">
-            <div class="col-0 col-sm-3"></div>
-            <div class="container col-10 col-sm-5 ">
-                <!-- Card -->
+<!-- Posts -->
+<div class="container">
+    {% for message in messages %}
+    <div class="alert alert-success d-flex align-items-center" role="alert">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 48">
+            check_circle
+        </span>
+        <div>
+            {{message}}
+        </div>
+    </div>
+    {% endfor %}
 
+    <div class="row my-5">
+        <div class="col-0 col-sm-3"></div>
+        <div class="container col-10 col-sm-5 ">
+            <!-- Card -->
 
-                <div class="card my-2 ">
-                    <div class="card-body">
-                        <img src="{% static 'assets/GolfBall.png'%}" alt="" srcset="" class="dp-logo">
-                        <h5 class="card-title d-inline">Card title</h5>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                    <img src="{% static 'assets/GolfBall.png'%}" class="card-img-bottom" alt="...">
-                    <div class="card-bottom">
-                        <div class="card-feature p-2 d-flex justify-content-between">
-                            <div class="like d-flex justify-content-around gap-2">
-                                <span class="material-symbols-outlined">
-                                    favorite
-                                </span>
-                                <span class="material-symbols-outlined">
-                                    comment
-                                </span>
-                                <span class="material-symbols-outlined">
-                                    send
-                                </span>
-                            </div>
+            {% for post in posts %}
+            <div class="card my-2 ">
+                <div class="card-body">
+                    <a href="/user/{{post.user}}"><img src="{% static 'assets/GolfBall.png'%}" alt="" srcset=""
+                            class="dp-logo"></a>
 
+                    <h5 class="card-title d-inline">{{post.user}}</h5>
+                    <p class="card-text ms-5"><small class="text-muted">{{post.created_at}}</small></p>
+                </div>
+                <a href="?id={{post.id}}">
+                    <img src="{{post.image.url}}" class="card-img-bottom" alt="..." >
+                </a>
+                <div class="card-body">
 
-                            <div class="bookmark">
-                                <span class="material-symbols-outlined">
-                                    bookmark
-                                </span>
-                            </div>
+                    <p class="card-text">{{post.caption}}</p>
+                </div>
+                <div class="card-bottom">
+                    <div class="card-feature p-2 d-flex justify-content-between">
+                        <div class="like d-flex justify-content-around gap-2">
+                            <span class="material-symbols-outlined">
+                                favorite
+                            </span>
+                            <span class="material-symbols-outlined">
+                                comment
+                            </span>
+                            <span class="material-symbols-outlined">
+                                send
+                            </span>
+                        </div>
+                        <div class="bookmark">
+                            <span class="material-symbols-outlined">
+                                bookmark
+                            </span>
                         </div>
                     </div>
                 </div>
-
-
-                <div class="card my-2 ">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                    <img src="..." class="card-img-bottom" alt="...">
-                </div>
-                <div class="card my-2 ">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                    <img src="..." class="card-img-bottom" alt="...">
-                </div>
-                <div class="card my-2 ">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                    <img src="..." class="card-img-bottom" alt="...">
-                </div>
             </div>
-            <div class="container d-none d-sm-block col-sm-4 my-2">
-                <div class="card" style="width: 18rem;">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        <li class="list-group-item">A third item</li>
-                    </ul>
+
+
+            {% endfor %}
+
+
+            <div class="card my-2 ">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
+                <img src="..." class="card-img-bottom" alt="...">
             </div>
         </div>
-
+        <div class="container d-none d-sm-block col-sm-4 my-2">
+            <div class="card" style="width: 18rem;">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">An item</li>
+                    <li class="list-group-item">A second item</li>
+                    <li class="list-group-item">A third item</li>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    {% endblock %}
+</div>
+
+{% endblock %}
