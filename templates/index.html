@@ -31,7 +31,8 @@
                     <a href="/user/{{post.user}}"><img src="{% static 'assets/GolfBall.png'%}" alt="" srcset=""
                             class="dp-logo"></a>
 
-                    <h5 class="card-title d-inline"><a href="profile/?user={{post.user}}" style="text-decoration: none; color:black;">{{post.user}}</a> </h5>
+                    <h5 class="card-title d-inline"><a href="profile?user={{post.user}}"
+                            style="text-decoration: none; color:black;">{{post.user}}</a> </h5>
                     <p class="card-text ms-5"><small class="text-muted">{{post.created_at}}</small></p>
                 </div>
                 <a href="?id={{post.id}}">
@@ -48,12 +49,12 @@
                                 <div>
                                     <form action="like-post" method="post">
                                         {% csrf_token %}
-                                         <!-- <a href="like-post?id={{post.id}}" class="" style="text-decoration: none; color: black;"> -->
-                                            <input type="text" name="post_id" id="" value="{{post.id}}" readonly hidden>
-                                            <span class="material-symbols-outlined">
-                                                <button type="submit"
-                                                    style="background-color: white; border:none;">favorite</button>
-                                            </span>
+                                        <!-- <a href="like-post?id={{post.id}}" class="" style="text-decoration: none; color: black;"> -->
+                                        <input type="text" name="post_id" id="" value="{{post.id}}" readonly hidden>
+                                        <span class="material-symbols-outlined">
+                                            <button type="submit"
+                                                style="background-color: white; border:none;">favorite</button>
+                                        </span>
                                         <!-- </a> -->
                                     </form>
                                 </div>

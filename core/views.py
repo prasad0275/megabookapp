@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages,auth
 from django.urls import reverse
-from .models import Profile,Post,LikePost
+from .models import Profile,Post,LikePost,FollowersCount
 import os
 from django.conf import settings
 # Create your views here.
@@ -194,22 +194,46 @@ def like_post(request):
 
 def user_profile(request):
     owner = 0
+    is_follow = 0
     user = request.GET.get('user')  
-    print(user)
     user_model = User.objects.get(username=user)
     user_profile = Profile.objects.filter(user=user_model).first()
-    print(user_profile)
     user_posts = Post.objects.filter(user=user).order_by('-created_at')
     image_id = request.GET.get("image")
     if str(user_model.username) == str(request.user):
         owner = 1
         print(owner,'in if')
 
+    if FollowersCount.objects.filter(follower=request.user,user=user).first():
+        is_follow = 1
+
     print(owner,'in out')
+    print('follow ' ,is_follow)
     if image_id != None:
         user_post_image = Post.objects.get(id=image_id)
-        return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'user_post_image':user_post_image})
+        return render(request,'account.html',
+                      {'user_profile':user_profile,
+                       'user_model':user_model,
+                       'user_posts':user_posts,
+                       'user_post_image':user_post_image,
+                       'is_follow':is_follow,
+                       }
+                      )
 
-    return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'owner':owner})
+    return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'owner':owner,'is_follow':is_follow,})
     # return render(request,'account.html')
+
+def follow(request):
+    follower = str(request.user)
+    user = request.GET.get('user')
+    print('follower ',follower)
+    print('user : ',user)
+
+    if FollowersCount.objects.filter(follower=follower,user=user).first():
+        delete_follower = FollowersCount.objects.get(follower=follower,user=user)
+        delete_follower.delete()
+    else:
+        FollowersCount.objects.create(follower=follower,user=user).save()
+    
+    return redirect(f'/profile?user={user}')
 

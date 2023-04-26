@@ -10,4 +10,6 @@ urlpatterns = [
     path('upload',views.upload),
     path('like-post',views.like_post),
     path('profile/',views.user_profile),
+    path('follow',views.follow),
+    
 ]
