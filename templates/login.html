@@ -16,31 +16,43 @@
             <a class="navbar-brand" href="/">Megabook</a>
         </div>
     </nav>
-
+    {% for m in messages %}
+    {% if m.tags == 'success' %}
+    <div class="alert alert-success" role="alert">
+        {{m}}
+    </div>
+    {% elif m.tags == 'error' %}
+    <div class="alert alert-danger" role="alert">
+        {{m}}
+    </div>
+    {% endif %}
+    {% endfor %}
     <div class="container ">
         <div class="row justify-content-center my-5 ">
-            
+
             <form action="" method="post" class="col-sm-4 bg-body-tertiary py-4 px-5">
                 {% csrf_token %}
                 <div class="d-inline text-center my-4">
                     <h2>Login</h2>
                 </div>
-                
+
                 <div class="input-group my-4">
                     <input type="text" name="username" class="form-control" id="floatingInput" placeholder="username">
-                    
+
                 </div>
                 <div class="input-group my-4">
-                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
-                    
+                    <input type="password" name="password" class="form-control" id="floatingPassword"
+                        placeholder="Password">
+
                 </div>
-                {% for m in messages %}
+                {% for m in messages.error %}
                 <p class="d-flex justify-content-center" style="color:red;">{{m}}</p>
                 {% endfor %}
                 <div class="input-group d-flex justify-content-center my-4">
                     <input type="submit" value="Login" class="btn btn-primary">
                 </div>
-                <p class="d-flex justify-content-center">Already haven't account? <a href="/auth/signup">Click here</a></p>
+                <p class="d-flex justify-content-center">Already haven't account? <a href="/auth/signup">Click here</a>
+                </p>
             </form>
         </div>
 

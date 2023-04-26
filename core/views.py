@@ -14,10 +14,17 @@ def index(request):
     posts = Post.objects.order_by('-created_at')
     print(request.user.username)
     user_like_post = LikePost.objects.filter(username = request.user.username)
+    
     like_list = []
     for p in user_like_post:
         like_list.append(p.post_id)
-    return render(request,'index.html',{'user_profile' : user_profile,'posts': posts,'user_like_post':user_like_post,'like_list':like_list,'owner':1}) 
+    return render(request,'index.html',
+                  {'user_profile' : user_profile,
+                    'posts': posts,
+                    'user_like_post':user_like_post,
+                    'like_list':like_list,
+                    'owner':1,
+                    }) 
 
 def login(request):
     if request.method == 'POST':
@@ -33,33 +40,34 @@ def login(request):
             user_dic = { 'profile_info' : profile_model,'login':True}
             return redirect('/',user_dic)
         else:
-            messages.info(request,'Invalid Credentials')
+            messages.error(request,'Invalid Credentials')
             return redirect('/auth/login')
 
     
     return render(request,'login.html')
 
 def signup(request):
+
     if request.method == 'POST':
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
         cpassword = request.POST['cpassword']
 
-        if(password != cpassword):
-            messages.info(request,'Password not matched!')
+        if(User.objects.filter(username = username).exists()):
+            messages.error(request,'Username is already taken!')
             return redirect('/auth/signup')
-
         elif(User.objects.filter(email = email).exists()):
-            messages.info(request,'Email is already exists!')
+            messages.error(request,'Email is already exists!')
+            return redirect('/auth/signup')
+        elif(password != cpassword):
+            messages.error(request,'Password not matched!')
             return redirect('/auth/signup')
         
-        elif(User.objects.filter(username = username).exists()):
-            messages.info(request,'Username is already taken!')
-            return redirect('/auth/signup')
         else:
             user = User.objects.create_user(username=username,email=email,password=password)
             user.save()
+            messages.success(request,'Register user successfully, Please login')
 
             user_model = User.objects.get(username=username)
             new_profile = Profile.objects.create(user=user_model,userid=user_model.id)
@@ -84,6 +92,9 @@ def account(request):
     user_model = User.objects.get(username = request.user)
     user_posts = Post.objects.filter(user=request.user).order_by('-created_at')
     image_id = request.GET.get("image")
+    posts_count = Post.objects.filter(user=request.user).count()
+    following_count = FollowersCount.objects.filter(follower=request.user).count()
+    follower_count = FollowersCount.objects.filter(user=request.user).count()
 
     q_delete = request.GET.get("delete")
     if q_delete != None:
@@ -95,12 +106,29 @@ def account(request):
     print("image : ",image_id)
     if image_id != None:
         user_post_image = Post.objects.get(id=image_id)
-        return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'user_post_image':user_post_image,'owner':1})
+        return render(request,'account.html',
+                      {'user_profile':user_profile,
+                       'user_model':user_model,
+                       'user_posts':user_posts,
+                       'user_post_image':user_post_image,
+                       'owner':1,
+                   'posts_count':posts_count,
+                    'following_count':following_count,
+                    'follower_count':follower_count,
+                       })
 
     # print(user_posts.image)
     # if image != None:
     #     user_post_image = Post.objects.get(id=image)
-    return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'owner':1})
+    return render(request,'account.html',
+                  {'user_profile':user_profile,
+                   'user_model':user_model,
+                   'user_posts':user_posts,
+                   'owner':1,
+                   'posts_count':posts_count,
+                    'following_count':following_count,
+                    'follower_count':follower_count
+                    })
 
 @login_required(login_url='/auth/login')
 def account_edit(request):
@@ -199,6 +227,10 @@ def user_profile(request):
     user_model = User.objects.get(username=user)
     user_profile = Profile.objects.filter(user=user_model).first()
     user_posts = Post.objects.filter(user=user).order_by('-created_at')
+    posts_count = Post.objects.filter(user=user).count()
+    following_count = FollowersCount.objects.filter(follower=user).count()
+    follower_count = FollowersCount.objects.filter(user=user).count()
+
     image_id = request.GET.get("image")
     if str(user_model.username) == str(request.user):
         owner = 1
@@ -217,10 +249,20 @@ def user_profile(request):
                        'user_posts':user_posts,
                        'user_post_image':user_post_image,
                        'is_follow':is_follow,
+
                        }
                       )
 
-    return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'owner':owner,'is_follow':is_follow,})
+    return render(request,'account.html',
+                  {'user_profile':user_profile,
+                   'user_model':user_model,
+                   'user_posts':user_posts,
+                   'owner':owner,
+                   'is_follow':is_follow,
+                   'posts_count':posts_count,
+                    'following_count':following_count,
+                    'follower_count':follower_count,
+                   })
     # return render(request,'account.html')
 
 def follow(request):
