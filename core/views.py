@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages,auth
-from .models import Profile,Post
+from django.urls import reverse
+from .models import Profile,Post,LikePost
 import os
 from django.conf import settings
 # Create your views here.
@@ -11,7 +12,12 @@ from django.conf import settings
 def index(request):
     user_profile = Profile.objects.get(user = request.user)
     posts = Post.objects.order_by('-created_at')
-    return render(request,'index.html',{'user_profile' : user_profile,'posts': posts}) 
+    print(request.user.username)
+    user_like_post = LikePost.objects.filter(username = request.user.username)
+    like_list = []
+    for p in user_like_post:
+        like_list.append(p.post_id)
+    return render(request,'index.html',{'user_profile' : user_profile,'posts': posts,'user_like_post':user_like_post,'like_list':like_list}) 
 
 def login(request):
     if request.method == 'POST':
@@ -62,6 +68,8 @@ def signup(request):
 
     return render(request,'signup.html')
 
+
+@login_required(login_url='/auth/login')
 def logout(request):
     if request.method == 'GET':
         auth.logout(request)
@@ -163,3 +171,23 @@ def upload(request):
         # redirect('/')
 
     return redirect('/')
+
+@login_required(login_url='/auth/login')
+def like_post(request):
+    username = request.user.username
+    post_id = request.POST.get('post_id')
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        like_filter = LikePost.objects.filter(post_id=post_id,username=username).first()
+
+        if like_filter == None:
+            new_post = LikePost.objects.create(post_id=post_id,username=username)
+            new_post.save()
+            post.no_of_likes += 1
+            post.save()
+            return redirect(reverse('index'))
+        else:
+            like_filter.delete()
+            post.no_of_likes -= 1
+            post.save()
+            return redirect(reverse('index'))

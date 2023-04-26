@@ -14,6 +14,12 @@
     </div>
     {% endfor %}
 
+    <!-- {{user_like_post}} <br>
+    {% for i in user_like_post %}
+    {{i.post_id}}
+    {% endfor %} -->
+    <!-- {{like_list}} -->
+
     <div class="row my-5">
         <div class="col-0 col-sm-3"></div>
         <div class="container col-10 col-sm-5 ">
@@ -29,7 +35,7 @@
                     <p class="card-text ms-5"><small class="text-muted">{{post.created_at}}</small></p>
                 </div>
                 <a href="?id={{post.id}}">
-                    <img src="{{post.image.url}}" class="card-img-bottom" alt="..." >
+                    <img src="{{post.image.url}}" class="card-img-bottom" alt="...">
                 </a>
                 <div class="card-body">
 
@@ -38,15 +44,53 @@
                 <div class="card-bottom">
                     <div class="card-feature p-2 d-flex justify-content-between">
                         <div class="like d-flex justify-content-around gap-2">
-                            <span class="material-symbols-outlined">
-                                favorite
-                            </span>
-                            <span class="material-symbols-outlined">
-                                comment
-                            </span>
-                            <span class="material-symbols-outlined">
-                                send
-                            </span>
+                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                <div>
+                                    <form action="like-post" method="post">
+                                        {% csrf_token %}
+                                         <!-- <a href="like-post?id={{post.id}}" class="" style="text-decoration: none; color: black;"> -->
+                                            <input type="text" name="post_id" id="" value="{{post.id}}" readonly hidden>
+                                            <span class="material-symbols-outlined">
+                                                <button type="submit"
+                                                    style="background-color: white; border:none;">favorite</button>
+                                            </span>
+                                        <!-- </a> -->
+                                    </form>
+                                </div>
+                                <div>
+                                    <p>{% if post.no_of_likes == 0 %}Like{% else %}{{post.no_of_likes}} Like{% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                <div>
+                                    <a href="/like-post?id={{post.id}}" class=""
+                                        style="text-decoration: none; color: black;">
+                                        <span class="material-symbols-outlined">
+                                            comment
+                                        </span>
+                                    </a>
+                                </div>
+                                <div>
+                                    <p style="text-align: center;">comment</p>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                <div>
+                                    <a href="/like-post?id={{post.id}}" class=""
+                                        style="text-decoration: none; color: black;">
+                                        <span class="material-symbols-outlined">
+                                            send
+                                        </span>
+                                    </a>
+                                </div>
+                                <div>
+                                    <p style="text-align: center;">share</p>
+                                </div>
+                            </div>
+
+
+
                         </div>
                         <div class="bookmark">
                             <span class="material-symbols-outlined">
