@@ -12,18 +12,10 @@
             <div class="mb-3 col-12 col-sm-8">
 
                 <div class="row my-2 d-flex justify-content-center">
-                    {% if owner == 1 %}
                     <div class="col-12">
                         <p class="d-inline lead">{{user_model.username}}</p>
                         <a href="/account/edit" class="btn btn-sm btn-primary col-4 col-sm-3">Edit profile</a>
-                    </div>  
-                    {% endif %}
-                    {% if owner ==  0 %}
-                    <div class="col-12">
-                        <p class="d-inline lead">{{user_model.username}}</p>
-                        <a href="#" class="btn btn-sm btn-primary col-4 col-sm-3">Follow</a>
                     </div>
-                    {% endif %}
 
                 </div>
                 <div class="row my-2">
@@ -66,7 +58,7 @@
                 gap: var(--g);
                 width: calc(4*var(--s) + 3*var(--g));
                 /* 3 times the size plus 2 times the gap */
-                aspect-ratio: 2;
+                aspect-ratio: 1;
                 grid-template-columns: repeat(4, auto);
             }
 
@@ -132,7 +124,6 @@
                     <div class="col-sm-8">
                         <img src="{{user_post_image.image.url}}" class="img-fluid rounded-start" alt="...">
                     </div>
-                    
                     <div class="col-sm-4 d-flex align-items-center justify-content-center">
                         <div class="card-body ">
                             <div>
@@ -142,35 +133,18 @@
                             </div>
                             <div>
                                 <ul class="list-group list-group-flush ">
-                                    {% if owner == 1 %}
                                     <li class="list-group-item" style="text-align: center;">
                                         <a href="/account?image={{user_post_image.id}}&delete=true"
                                             style="text-decoration: none; color:red; font-weight: bold;">Delete</a>
                                     </li>
-                                    {% endif %}
                                     <li class="list-group-item" style="text-align: center;"><a href=""
                                             style="text-decoration: none; color:black;">Share</a></li>
-
-
-                                    <li class="list-group-item" style="text-align: center;">
-                                        <!-- <a  href="/account"  href="profile/?user={{user_model.username}}"                              
-                                        
-                                            style="text-decoration: none; color:black">Cancel
-                                        
-                                        </a> -->
-                                        {% if owner == 1 %}
-                                        <a  href="/account" style="text-decoration: none; color:black">Cancel</a>
-                                        {% endif %}
-                                        {% if owner != 1 %}
-                                        <a href="/profile/?user={{user_model.username}}" style="text-decoration: none; color:black">Cancel</a>
-                                        {% endif %} 
-                                    </li>
-                                        
+                                    <li class="list-group-item" style="text-align: center;"><a href="/account"
+                                            style="text-decoration: none; color:black">Cancel</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -180,11 +154,7 @@
         <div class="gallery">
             {% for post in user_posts %}
             <div>
-                {% if owner == 1 %}
                 <a href="/account?image={{post.id}}">
-                {% elif owner == 0 %}
-                <a href="/profile/?user={{user_model.username}}&image={{post.id}}">
-                {% endif %}
                     <img src="{{post.image.url}}" class="img-grid">
                 </a>
 

@@ -31,7 +31,7 @@
                     <a href="/user/{{post.user}}"><img src="{% static 'assets/GolfBall.png'%}" alt="" srcset=""
                             class="dp-logo"></a>
 
-                    <h5 class="card-title d-inline">{{post.user}}</h5>
+                    <h5 class="card-title d-inline"><a href="profile/?user={{post.user}}" style="text-decoration: none; color:black;">{{post.user}}</a> </h5>
                     <p class="card-text ms-5"><small class="text-muted">{{post.created_at}}</small></p>
                 </div>
                 <a href="?id={{post.id}}">

@@ -17,7 +17,7 @@ def index(request):
     like_list = []
     for p in user_like_post:
         like_list.append(p.post_id)
-    return render(request,'index.html',{'user_profile' : user_profile,'posts': posts,'user_like_post':user_like_post,'like_list':like_list}) 
+    return render(request,'index.html',{'user_profile' : user_profile,'posts': posts,'user_like_post':user_like_post,'like_list':like_list,'owner':1}) 
 
 def login(request):
     if request.method == 'POST':
@@ -95,12 +95,12 @@ def account(request):
     print("image : ",image_id)
     if image_id != None:
         user_post_image = Post.objects.get(id=image_id)
-        return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'user_post_image':user_post_image})
+        return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'user_post_image':user_post_image,'owner':1})
 
     # print(user_posts.image)
     # if image != None:
     #     user_post_image = Post.objects.get(id=image)
-    return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts})
+    return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'owner':1})
 
 @login_required(login_url='/auth/login')
 def account_edit(request):
@@ -191,3 +191,25 @@ def like_post(request):
             post.no_of_likes -= 1
             post.save()
             return redirect(reverse('index'))
+
+def user_profile(request):
+    owner = 0
+    user = request.GET.get('user')  
+    print(user)
+    user_model = User.objects.get(username=user)
+    user_profile = Profile.objects.filter(user=user_model).first()
+    print(user_profile)
+    user_posts = Post.objects.filter(user=user).order_by('-created_at')
+    image_id = request.GET.get("image")
+    if str(user_model.username) == str(request.user):
+        owner = 1
+        print(owner,'in if')
+
+    print(owner,'in out')
+    if image_id != None:
+        user_post_image = Post.objects.get(id=image_id)
+        return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'user_post_image':user_post_image})
+
+    return render(request,'account.html',{'user_profile':user_profile,'user_model':user_model,'user_posts':user_posts,'owner':owner})
+    # return render(request,'account.html')
+
