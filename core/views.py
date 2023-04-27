@@ -279,3 +279,27 @@ def follow(request):
     
     return redirect(f'/profile?user={user}')
 
+def search(request):
+
+    search = request.GET.get('search')
+    user_model = User.objects.filter(username__icontains=search)
+    user_list = []
+    user_profile = None
+    if user_model is not None:
+        for u in user_model:
+            if u.is_superuser == False:
+                user_profile = Profile.objects.filter(user=u).first()
+                user_list.append(user_profile)
+                # user_profile = user_profile.user
+                print(user_profile.dp.url,user_profile.user.first_name)
+    #     user_dp.append([u,user_profile.dp])
+    # user_profile = Profile.objects.filter(user=user_model)
+    # print(user_dp)
+
+    # print(user_model.profile)
+    return render(request,'search.html',
+                  {
+                   'user_profile':user_profile,
+                   'user_list':user_list,
+                   })
+

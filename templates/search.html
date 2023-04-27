@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<div class="container ">
+    <div class="result-for mt-5 mb-3">
+        <h6>Result For : </h6>
+    </div>
+    {% for u in user_list %}
+    <div class="row bg-light my-3 px-3">
+        <div class="col-12 d-flex">
+            <div class="dp">
+                <img src="{{u.dp.url}}" alt="" srcset="" height="70px" width="70px" style="border-radius: 50%;">
+            </div>
+            <div class="details d-flex flex-column justify-content-center mx-3">
+                <div class="username">
+                    <a href="profile?user={{u.user.username}}"
+                            style="text-decoration: none; color:black;">
+                    <h5>@{{u.user.username}}</h5></a>
+                </div>
+                <div class="name">
+                    <b>{{u.user.first_name | capfirst}} {{u.user.last_name | capfirst}}</b>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    
+</div>
+
+{% endblock %}
