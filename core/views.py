@@ -14,8 +14,21 @@ def index(request):
     posts = Post.objects.order_by('-created_at')
     print(request.user.username)
     user_like_post = LikePost.objects.filter(username = request.user.username)
-    
+    following = FollowersCount.objects.filter(follower=request.user.username)
+    user = []
     like_list = []
+    following_list = []
+    print(following)
+
+    for i in following:
+        u = User.objects.get(username=i)
+        p = Profile.objects.get(user=u)
+        following_list.append([u,p])
+
+    print(following_list)
+    # for i in following_list:
+    #     print(i.username)
+    
     for p in user_like_post:
         like_list.append(p.post_id)
     return render(request,'index.html',
@@ -23,6 +36,7 @@ def index(request):
                     'posts': posts,
                     'user_like_post':user_like_post,
                     'like_list':like_list,
+                    'following_user_list':following_list,
                     'owner':1,
                     }) 
 
@@ -42,8 +56,7 @@ def login(request):
         else:
             messages.error(request,'Invalid Credentials')
             return redirect('/auth/login')
-
-    
+  
     return render(request,'login.html')
 
 def signup(request):
@@ -67,7 +80,7 @@ def signup(request):
         else:
             user = User.objects.create_user(username=username,email=email,password=password)
             user.save()
-            messages.success(request,'Register user successfully, Please login')
+            messages.success(request,'User registered successfully, Please login')
 
             user_model = User.objects.get(username=username)
             new_profile = Profile.objects.create(user=user_model,userid=user_model.id)
@@ -86,6 +99,7 @@ def logout(request):
         print(islogin)
         return redirect('auth/login')
     
+#The user watching its own profile
 @login_required(login_url='/auth/login')
 def account(request):
     user_profile = Profile.objects.get(user=request.user)
@@ -219,7 +233,8 @@ def like_post(request):
             post.no_of_likes -= 1
             post.save()
             return redirect(reverse('index'))
-
+        
+#This is for user which are watching another user profile
 def user_profile(request):
     owner = 0
     is_follow = 0
