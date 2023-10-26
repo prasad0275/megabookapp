@@ -195,11 +195,11 @@
             {% for post in user_posts %}
             <div>
                 {% if owner == 1 %}
-                <a href="/account?image={{post.id}}">
-                    {% elif owner == 0 %}
+                    <a href="/account?image={{post.id}}">
+                {% elif owner == 0 %}
                     <a href="/profile?user={{user_model.username}}&image={{post.id}}">
-                        {% endif %}
-                        <img src="{{post.image.url}}" class="img-grid">
+                {% endif %}
+                    <img src="{{post.image.url}}" class="img-grid">
                     </a>
 
             </div>

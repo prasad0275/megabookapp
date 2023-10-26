@@ -163,28 +163,30 @@ def account_edit(request):
             contact_no  = None
         if request.FILES.get('dp') == None:
             dp = user_profile.dp
-            user_model.first_name = first_name
-            user_model.last_name = last_name
-            user_profile.bio = bio
-            user_profile.contact_no = contact_no
-            user_profile.country = country
-            user_profile.city = city
 
-            user_model.save()
-            user_profile.save()
+            # user_model.first_name = first_name
+            # user_model.last_name = last_name
+            # user_profile.bio = bio
+            # user_profile.contact_no = contact_no
+            # user_profile.country = country
+            # user_profile.city = city
 
-        if request.FILES.get('dp') != None:
+            # user_model.save()
+            # user_profile.save()
+
+        else:
             dp = request.FILES.get('dp')
-            user_profile.dp = dp
-            user_model.first_name = first_name
-            user_model.last_name = last_name
-            user_profile.bio = bio
-            user_profile.contact_no = contact_no
-            user_profile.country = country
-            user_profile.city = city
 
-            user_model.save()
-            user_profile.save()
+        user_profile.dp = dp
+        user_model.first_name = first_name
+        user_model.last_name = last_name
+        user_profile.bio = bio
+        user_profile.contact_no = contact_no
+        user_profile.country = country
+        user_profile.city = city
+
+        user_model.save()
+        user_profile.save()
             
         
     
